@@ -1,0 +1,8 @@
+include README.md
+include INSTALL.md
+include AUTHORS.md
+include sissd
+include sissd.conf
+include sissd.py
+recursive-include Modules *.c *.o Makefile
+include MANIFEST.in

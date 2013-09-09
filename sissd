@@ -1,0 +1,47 @@
+#! /bin/bash
+ 
+SUSHI_DIR=/var/siss
+
+EXIT_CODE=0
+
+start() {
+  if [ -f $SUSHI_DIR/sissd.pid ] && kill -0 `cat $SUSHI_DIR/sissd.pid` > /dev/null 2>&1 ; then
+    echo "Sushi daemon was already run"
+  else
+    echo "Start Sushi daemon..."
+    /bin/bash -c "sissd.py --log_file_prefix=$SUSHI_DIR/sissd.log &"
+    ps aux | grep sissd.py | grep -i python | awk '{print $2}' > $SUSHI_DIR/sissd.pid
+    chmod 400 $SUSHI_DIR/sissd.pid
+    sleep 5
+  fi
+}
+
+stop() {
+  if [ -f $SUSHI_DIR/sissd.pid ] && kill -0 `cat $SUSHI_DIR/sissd.pid` > /dev/null 2>&1 ; then
+    echo "Stop Sushi daemon..."
+    /bin/bash -c "kill `cat $SUSHI_DIR/sissd.pid`"
+    rm -f $SUSHI_DIR/sushdi.pid
+    sleep 2
+  else
+    echo "Sushi daemon was not run"
+  fi
+}
+ 
+case "$1" in
+    start)
+      start
+      ;;
+    stop)
+      stop
+      ;;
+    restart)
+      stop
+      sleep 2
+      start
+      ;;
+    *)
+      echo "Usage: $0 {start|stop|restart}"
+      EXIT_CODE=1
+esac
+
+exit $EXIT_CODE
