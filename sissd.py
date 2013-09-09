@@ -43,7 +43,9 @@ class SissBaseHandler(tornado.web.RequestHandler):
             return False
 
         for c in fid:
-            if c not in "01234567890abcdef_":
+            # FIXME: enable it later
+            #if c not in "01234567890abcdef_":        
+            if c not in "01234567890abcdef_.wbp":
                 return False
         return True
 
